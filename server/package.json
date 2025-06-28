@@ -1,5 +1,5 @@
 {
-  "name": "@apollo-server-demo/server",
+  "name": "@apollo-graphql-demo/server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,9 +14,5 @@
   "packageManager": "pnpm@10.4.1",
   "dependencies": {
     "@apollo/server": "^4.12.2"
-  },
-  "devDependencies": {
-    "@graphql-tools/load-files": "^7.0.1",
-    "@graphql-tools/merge": "^9.0.24"
   }
 }

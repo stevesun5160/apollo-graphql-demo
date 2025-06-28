@@ -10,5 +10,8 @@
     "types": ["node"]
   },
   "files": [],
-  "references": [{ "path": "./server" }, { "path": "./client" }]
+  "references": [{ "path": "./server" }, { "path": "./client" }],
+  "ts-node": {
+    "esm": true
+  }
 }
