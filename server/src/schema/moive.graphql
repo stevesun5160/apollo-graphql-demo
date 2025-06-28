@@ -1,0 +1,27 @@
+type Detail {
+  boxOffice: String
+  duration: Int
+}
+
+type Movie {
+  id: ID
+  title: String
+  director: Director
+  releaseYear: Int
+  genre: String
+  img: String
+  detail: Detail
+}
+
+type Director {
+  name: String
+  age: Int
+  gender: String
+}
+
+type Query {
+  allMovies: [Movie]
+  allGenres: [String!]
+  allDirectors: [Director]
+  movieDetail(id: ID!): Detail
+}
