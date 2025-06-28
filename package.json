@@ -6,8 +6,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start:api": "pnpm --filter @apollo-graphql-demo/server run start",
-    "dev:client": "pnpm --filter client dev",
+    "api": "pnpm --filter @apollo-graphql-demo/server start",
+    "dev": "pnpm --filter @apollo-graphql-demo/client dev",
     "codegen": "pnpm --filter client codegen"
   },
   "keywords": [],

@@ -1,36 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 
-const typeDefs = `#graphql
-  type Detail {
-    boxOffice: String!
-    duration: Int!
-  }
-
-  type Movie {
-    id: ID!
-    title: String!
-    director: Director!
-    releaseYear: Int!
-    genre: String!
-    img: String!
-    detail: Detail!
-  }
-
-  type Director {
-    name: String!
-    age: Int!
-    gender: String!
-  }
-
-  type Query {
-    allMovies: [Movie!]!
-    allGenres: [String!]!
-    allDirectors: [Director!]!
-    movieDetail(id: ID!): Detail!
-  }
-`;
-
 // Fake data
 const genreList = {
   FICTION: '虛構',
@@ -105,6 +75,36 @@ const movies = [
     detail: { boxOffice: '4.02億美元', duration: 155 },
   },
 ];
+
+const typeDefs = `#graphql
+  type Detail {
+    boxOffice: String!
+    duration: Int!
+  }
+
+  type Movie {
+    id: ID!
+    title: String!
+    director: Director!
+    releaseYear: Int!
+    genre: String!
+    img: String!
+    detail: Detail!
+  }
+
+  type Director {
+    name: String!
+    age: Int!
+    gender: String!
+  }
+
+  type Query {
+    allMovies: [Movie!]!
+    allGenres: [String!]!
+    allDirectors: [Director!]!
+    movieDetail(id: ID!): Detail!
+  }
+`;
 
 const resolvers = {
   Query: {
