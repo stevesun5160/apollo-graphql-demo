@@ -77,65 +77,10 @@ const movies = [
 ];
 
 const typeDefs = `#graphql
-  type Director {
-    name: String
-    age: Int
-    gender: String
-  }
 
-  type Movie {
-    id: ID!
-    title: String
-    director: Director
-    releaseYear: Int
-    genre: String
-    img: String
-    detail: MovieDetail
-  }
-
-  type MovieDetail {
-    boxOffice: String
-    duration: Int
-  }
-
-  type Query {
-    allMovies: [Movie]
-    movieDetail(id: ID!): MovieDetail
-    allGenres: [String]
-  }
-
-  type Mutation {
-    addMovie(title: String!, releaseYear: Int!, genre: String!, directorName: String!): Movie
-  }
 `;
 
-const resolvers = {
-  Query: {
-    allMovies: () => movies,
-    movieDetail: (parent, { id }) => {
-      const movie = movies.find((movie) => movie.id === id);
-      return movie?.detail || null;
-    },
-    allGenres: () => Object.values(genreList),
-  },
-  Mutation: {
-    addMovie: (parent, { title, releaseYear, genre, directorName }) => {
-      const newId = String(movies.length + 1);
-      const newDirector = { name: directorName, age: 0, gender: '' };
-      const newMovie = {
-        id: newId,
-        title,
-        director: newDirector,
-        releaseYear,
-        genre,
-        img: '',
-        detail: { boxOffice: '', duration: 0 },
-      };
-      movies.push(newMovie);
-      return newMovie;
-    },
-  },
-};
+const resolvers = {};
 
 const server = new ApolloServer({
   typeDefs,
