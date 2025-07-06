@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Search, Calendar, Film, User, Filter } from "lucide-react";
+import { Search, Calendar, Film, User, Filter, Plus } from "lucide-react";
+import { useMutation } from "@apollo/client";
 import { useGenres, useMovieDetail, useMovies } from "./queries/movie";
+import { ADD_MOVIE } from "./queries/mutations";
 
 // Types
 type Director = {
@@ -133,6 +135,82 @@ const FilterBar = ({
   );
 };
 
+// Add Movie Form
+const AddMovieForm = ({ genres, onMovieAdded }) => {
+  const [title, setTitle] = useState("");
+  const [releaseYear, setReleaseYear] = useState("");
+  const [genre, setGenre] = useState("");
+  const [directorName, setDirectorName] = useState("");
+  const [addMovie, { loading, error }] = useMutation(ADD_MOVIE, {
+    onCompleted: () => {
+      onMovieAdded();
+      setTitle("");
+      setReleaseYear("");
+      setGenre("");
+      setDirectorName("");
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addMovie({ variables: { title, releaseYear: parseInt(releaseYear), genre, directorName } });
+  };
+
+  return (
+    <div className="mb-8 rounded-lg bg-white p-6 shadow-md">
+      <h2 className="mb-4 text-2xl font-bold text-gray-800">新增電影</h2>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <input
+          type="text"
+          placeholder="電影標題"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="rounded-lg border border-gray-300 p-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+          required
+        />
+        <input
+          type="number"
+          placeholder="上映年份"
+          value={releaseYear}
+          onChange={(e) => setReleaseYear(e.target.value)}
+          className="rounded-lg border border-gray-300 p-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+          required
+        />
+        <select
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
+          className="rounded-lg border border-gray-300 p-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="">選擇類型</option>
+          {genres.map((g) => (
+            <option key={g} value={g}>
+              {g}
+            </option>
+          ))}
+        </select>
+        <input
+          type="text"
+          placeholder="導演名稱"
+          value={directorName}
+          onChange={(e) => setDirectorName(e.target.value)}
+          className="rounded-lg border border-gray-300 p-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+          required
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex items-center justify-center rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600 disabled:bg-gray-400 md:col-span-2"
+        >
+          <Plus className="mr-2 h-5 w-5" />
+          {loading ? "新增中..." : "新增電影"}
+        </button>
+      </form>
+      {error && <p className="mt-4 text-red-500">新增失敗: {error.message}</p>}
+    </div>
+  );
+};
+
 // Loading Component
 const LoadingSpinner: React.FC = () => (
   <div className="flex items-center justify-center py-12">
@@ -142,7 +220,7 @@ const LoadingSpinner: React.FC = () => (
 
 // Main App Component
 const App = () => {
-  const { movies, loading: iseMoviesLoading } = useMovies();
+  const { movies, loading: iseMoviesLoading, refetch: refetchMovies } = useMovies();
   const { genres, loading: isGenresLoading } = useGenres();
   const [selectedGenre, setSelectedGenre] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -174,6 +252,9 @@ const App = () => {
             探索精彩的電影世界，發現你的下一部最愛電影
           </p>
         </div>
+
+        {/* Add Movie Form */}
+        <AddMovieForm genres={genres || []} onMovieAdded={refetchMovies} />
 
         {/* Filter Bar */}
         <FilterBar

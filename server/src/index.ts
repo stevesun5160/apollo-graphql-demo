@@ -77,42 +77,62 @@ const movies = [
 ];
 
 const typeDefs = `#graphql
-  type Detail {
-    boxOffice: String!
-    duration: Int!
+  type Director {
+    name: String
+    age: Int
+    gender: String
   }
 
   type Movie {
     id: ID!
-    title: String!
-    director: Director!
-    releaseYear: Int!
-    genre: String!
-    img: String!
-    detail: Detail!
+    title: String
+    director: Director
+    releaseYear: Int
+    genre: String
+    img: String
+    detail: MovieDetail
   }
 
-  type Director {
-    name: String!
-    age: Int!
-    gender: String!
+  type MovieDetail {
+    boxOffice: String
+    duration: Int
   }
 
   type Query {
-    allMovies: [Movie!]!
-    allGenres: [String!]!
-    allDirectors: [Director!]!
-    movieDetail(id: ID!): Detail!
+    allMovies: [Movie]
+    movieDetail(id: ID!): MovieDetail
+    allGenres: [String]
+  }
+
+  type Mutation {
+    addMovie(title: String!, releaseYear: Int!, genre: String!, directorName: String!): Movie
   }
 `;
 
 const resolvers = {
   Query: {
     allMovies: () => movies,
+    movieDetail: (parent, { id }) => {
+      const movie = movies.find((movie) => movie.id === id);
+      return movie?.detail || null;
+    },
     allGenres: () => Object.values(genreList),
-    allDirectors: () => directors,
-    movieDetail: (_: any, { id }: { id: string }) => {
-      return movies.find((movie) => movie.id === id).detail;
+  },
+  Mutation: {
+    addMovie: (parent, { title, releaseYear, genre, directorName }) => {
+      const newId = String(movies.length + 1);
+      const newDirector = { name: directorName, age: 0, gender: '' };
+      const newMovie = {
+        id: newId,
+        title,
+        director: newDirector,
+        releaseYear,
+        genre,
+        img: '',
+        detail: { boxOffice: '', duration: 0 },
+      };
+      movies.push(newMovie);
+      return newMovie;
     },
   },
 };

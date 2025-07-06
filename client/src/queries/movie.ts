@@ -20,12 +20,13 @@ const FETCH_ALL_MOVIES = gql(/* GraphQL */ `
 `);
 
 export const useMovies = () => {
-  const { data, loading, error } = useQuery(FETCH_ALL_MOVIES);
+  const { data, loading, error, refetch } = useQuery(FETCH_ALL_MOVIES);
 
   return {
     movies: data?.allMovies || [],
     loading,
     error,
+    refetch,
   };
 };
 
